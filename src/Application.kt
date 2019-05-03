@@ -22,9 +22,7 @@ fun Application.module(testing: Boolean = false) {
         filter { call -> call.request.path().startsWith("/") }
     }
 
-    install(DefaultHeaders) {
-        header("X-Engine", "Ktor")
-    }
+    install(DefaultHeaders)
 
     routing {
         get("/") {
