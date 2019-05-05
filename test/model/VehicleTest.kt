@@ -6,6 +6,6 @@ import kotlin.test.assertEquals
 class VehicleTest {
     @Test
     fun shouldHaveExpectedVehicleType() {
-        assertEquals(Vehicle(VehicleType.CAR).type, VehicleType.CAR)
+        assertEquals(VehicleType.CAR, Vehicle(VehicleType.CAR).type)
     }
 }
