@@ -11,10 +11,11 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import org.slf4j.event.Level
+import `is`.qual.repository.VehicleRepository
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
-fun Application.module() {
+fun Application.module(vehicleRepository: VehicleRepository = VehicleRepository()) {
     install(CallLogging) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/") }
@@ -23,8 +24,12 @@ fun Application.module() {
     install(DefaultHeaders)
 
     routing {
-        get("/") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
+        get("/vehicle") {
+            val response = vehicleRepository.getAll()
+            val jsonResponse = "[" + response.joinToString() { it.toJson() } + "]"
+
+            call.application.environment.log.info("Response: $response")
+            call.respondText(jsonResponse, contentType = ContentType.Application.Json)
         }
     }
 }
