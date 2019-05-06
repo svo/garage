@@ -1,5 +1,6 @@
 package `is`.qual
 
+import com.google.gson.Gson
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -25,11 +26,8 @@ fun Application.module(vehicleRepository: VehicleRepository = VehicleRepository(
 
     routing {
         get("/vehicle") {
-            val response = vehicleRepository.getAll()
-            val jsonResponse = "[" + response.joinToString() { it.toJson() } + "]"
-
-            call.application.environment.log.info("Response: $response")
-            call.respondText(jsonResponse, contentType = ContentType.Application.Json)
+            call.respondText(Gson().toJson(vehicleRepository.getAll()),
+                contentType = ContentType.Application.Json)
         }
     }
 }
