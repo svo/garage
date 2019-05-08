@@ -1,14 +1,14 @@
 package `is`.qual
 
-import com.google.gson.Gson
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
+import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
-import io.ktor.http.ContentType
+import io.ktor.gson.gson
 import io.ktor.request.path
-import io.ktor.response.respondText
+import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import org.slf4j.event.Level
@@ -23,11 +23,13 @@ fun Application.module(vehicleRepository: VehicleRepository = VehicleRepository(
     }
 
     install(DefaultHeaders)
-
+    install(ContentNegotiation) {
+        gson {
+        }
+    }
     routing {
         get("/vehicle") {
-            call.respondText(Gson().toJson(vehicleRepository.getAll()),
-                contentType = ContentType.Application.Json)
+            call.respond(vehicleRepository.getAll())
         }
     }
 }
