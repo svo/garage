@@ -2,13 +2,20 @@
 - hosts: all
 
   pre_tasks:
-  - name: Update apt cache
-    apt: update_cache=yes
-    become: yes
+    - name: Update apt cache
+      apt: update_cache=yes
+      become: yes
 
-  - name: Install avahi for MDNS
-    apt: pkg=avahi-daemon
-    become: yes
+    - name: Install avahi for MDNS
+      apt: pkg=avahi-daemon
+      become: yes
 
   roles:
-  - java
+    - docker
+    - docker-compose
+    - java
+
+  post_tasks:
+    - name: Add vagrant user to docker group
+      user: name=vagrant groups=docker append=yes
+      become: yes
