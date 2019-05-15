@@ -2,3 +2,5 @@
 /.gradle
 /build
 *.retry
+.idea/
+garage.iml
