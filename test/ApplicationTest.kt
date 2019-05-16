@@ -15,7 +15,7 @@ import `is`.qual.repository.VehicleRepository
 
 class ApplicationTest {
     @Test
-    fun testVehicleGetStatus() {
+    fun shouldHaveVehicleGetStatus() {
         var expected: List<Vehicle> = emptyList()
         val vehicleRepository = mock<VehicleRepository> {
             on { getAll() } doReturn expected
@@ -29,7 +29,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun testVehicleGetResponse() {
+    fun shouldHaveVehicleGetResponse() {
         var expected: List<Vehicle> = listOf(Vehicle(VehicleType.CAR))
         val expectedResponse = "[{\"type\":\"CAR\"}]"
         val vehicleRepository = mock<VehicleRepository> {
@@ -44,7 +44,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun testVehiclePostStatus() {
+    fun shouldHaveVehiclePostStatus() {
         val vehicleRepository = mock<VehicleRepository> {
             on { save(any()) } doReturn 1
         }
@@ -57,7 +57,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun testVehiclePostResponse() {
+    fun shouldHaveVehiclePostResponse() {
         var expected: Int = 1
         val expectedResponse = "1"
         val vehicleRepository = mock<VehicleRepository> {

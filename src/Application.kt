@@ -1,5 +1,8 @@
 package `is`.qual
 
+import com.typesafe.config.ConfigFactory
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -13,6 +16,7 @@ import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import java.util.Properties
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -24,8 +28,18 @@ import `is`.qual.repository.VehicleTable
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
+fun initializeDatabase() {
+    val databaseType = ConfigFactory.load().getString("database_type")
+    val configuration = ConfigFactory.load().getConfig(databaseType)
+    val properties = Properties()
+    configuration.entrySet().forEach { e -> properties.setProperty(e.key, configuration.getString(e.key)) }
+    val hikariConfiguration = HikariConfig(properties)
+    val datasource = HikariDataSource(hikariConfiguration)
+    Database.connect(datasource)
+}
+
 fun Application.module(vehicleRepository: VehicleRepository = VehicleRepository()) {
-    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    initializeDatabase()
 
     install(CallLogging) {
         level = Level.INFO
