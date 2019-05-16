@@ -4,6 +4,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.doReturn
 import kotlin.test.Test
@@ -37,6 +38,34 @@ class ApplicationTest {
 
         withTestApplication({ module(vehicleRepository = vehicleRepository) }) {
             handleRequest(HttpMethod.Get, "/vehicle").apply {
+                assertEquals(expectedResponse, response.content)
+            }
+        }
+    }
+
+    @Test
+    fun testVehiclePostStatus() {
+        val vehicleRepository = mock<VehicleRepository> {
+            on { save(any()) } doReturn 1
+        }
+
+        withTestApplication({ module(vehicleRepository = vehicleRepository) }) {
+            handleRequest(HttpMethod.Post, "/vehicle").apply {
+                assertEquals(HttpStatusCode.Created, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun testVehiclePostResponse() {
+        var expected: Int = 1
+        val expectedResponse = "1"
+        val vehicleRepository = mock<VehicleRepository> {
+            on { save(any()) } doReturn expected
+        }
+
+        withTestApplication({ module(vehicleRepository = vehicleRepository) }) {
+            handleRequest(HttpMethod.Post, "/vehicle").apply {
                 assertEquals(expectedResponse, response.content)
             }
         }

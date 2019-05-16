@@ -19,7 +19,7 @@ open class VehicleRepository {
         }
     }
 
-    fun save(vehicle: Vehicle): Int {
+    open fun save(vehicle: Vehicle): Int {
         return VehicleTable.insert {
             it[type] = vehicle.type.name
         } get VehicleTable.id
