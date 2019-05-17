@@ -9,12 +9,14 @@ buildscript {
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:$ktlint_gradle_version"
+    classpath "gradle.plugin.org.liquibase:liquibase-gradle-plugin:$liquibase_gradle_version"
   }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
 apply plugin: "org.jlleitschuh.gradle.ktlint"
+apply plugin: "org.liquibase.gradle"
 
 group 'garage'
 version '0.0.1-SNAPSHOT'
@@ -47,8 +49,25 @@ dependencies {
   compile "com.typesafe:config:$typesafe_version"
   runtime "org.postgresql:postgresql:$postgres_version"
   runtime "com.h2database:h2:$h2_version"
+
+  liquibaseRuntime "org.liquibase:liquibase-core:$liquibase_core_version"
+  liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:$liquibase_groovy_dsl_version"
+  liquibaseRuntime "org.postgresql:postgresql:$postgres_version"
+  liquibaseRuntime "com.h2database:h2:$h2_version"
+
   implementation "com.google.code.gson:gson:$gson_version"
 
   testCompile "io.ktor:ktor-server-tests:$ktor_version"
   testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
+}
+
+liquibase {
+  activities {
+    main {
+      changeLogFile 'migrations.groovy'
+      url 'jdbc:postgresql://localhost:5432/garage'
+      username 'garage'
+      password 'garage'
+    }
+  }
 }
