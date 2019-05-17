@@ -6,9 +6,11 @@ import org.jetbrains.exposed.sql.Table
 import `is`.qual.model.Vehicle
 import `is`.qual.model.VehicleType
 
+const val SHORT_STRING_LENGTH = 16
+
 object VehicleTable : Table("vehicle") {
     val id = integer("id").autoIncrement().primaryKey()
-    val type = varchar("type", 16)
+    val type = varchar("type", SHORT_STRING_LENGTH)
 }
 
 open class VehicleRepository {

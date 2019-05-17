@@ -2,7 +2,7 @@
 
 source bash/common.sh
 
-./gradlew ktlintCheck
+./gradlew ktlintCheck && ./gradlew detekt
 quality=$?
 echo_result "Quality Tests" $quality
 
